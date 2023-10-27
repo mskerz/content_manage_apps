@@ -41,6 +41,9 @@ dependencies:
   intl: ^0.18.1
   google_fonts: ^6.1.0
   animations: ^2.0.8
+  quickalert: ^1.0.2
+  badges: ^3.1.2
+  anim_search_bar: ^2.0.3
 
 dev_dependencies:
   flutter_test:

@@ -8,6 +8,7 @@ import 'package:content_manage_apps/services/bookmarkService.dart';
 import 'package:content_manage_apps/services/postsService.dart';
 import 'package:content_manage_apps/services/userService.dart';
 import 'package:content_manage_apps/widget/appbar.dart';
+import 'package:content_manage_apps/widget/count_bookmark.dart';
 import 'package:content_manage_apps/widget/drawer.dart';
 import 'package:flutter/material.dart';
 
@@ -128,12 +129,7 @@ class _MyBookListPageState extends State<MyBookListPage> {
                       ));
                 },
               ),
-              IconButton(
-                icon: Icon(Icons.bookmark),
-                onPressed: () {
-                  refreshPosts();
-                },
-              ),
+              buildBookmarkIcon(context,true),
               IconButton(
                 icon: Icon(Icons.create),
                 onPressed: () {

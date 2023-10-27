@@ -1,4 +1,5 @@
 import 'package:animations/animations.dart';
+import 'package:content_manage_apps/login.dart';
 import 'package:content_manage_apps/main.dart';
 import 'package:content_manage_apps/page/my_bookmark.dart';
 import 'package:content_manage_apps/page/my_postList.dart';
@@ -115,7 +116,7 @@ Widget userDrawer(Future<User>? user) {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => MyHomePage()),
+                        MaterialPageRoute(builder: (context) => LoginPage()),
                       );
                     },
                   ),

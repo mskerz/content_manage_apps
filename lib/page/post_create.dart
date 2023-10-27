@@ -16,10 +16,15 @@ class _CreatePostPageState extends State<CreatePostPage> {
   final title_controller = TextEditingController();
   // ignore: non_constant_identifier_names
   final details_controller = TextEditingController();
-  final category_controller = TextEditingController();
+  int category_id = 0;
+  List<Category> categories = [];
+  String selectedCategory = ''; // หมวดหมู่ที่ถูกเลือก
   @override
   void initState() {
     super.initState();
+     
+
+     // เลือกหมวดหมู่แรก
   }
 
   @override
@@ -73,15 +78,20 @@ class _CreatePostPageState extends State<CreatePostPage> {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "หมวดหมู่",
-                      style: TextStyle(fontSize: 20),
+                Row(
+                  children: [
+                    const Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "หมวดหมู่",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      ),
                     ),
-                  ),
+                    
+                  ],
                 ),
               ],
             ),
