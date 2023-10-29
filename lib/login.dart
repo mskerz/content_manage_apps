@@ -7,6 +7,7 @@ import 'package:content_manage_apps/register.dart';
 import 'package:content_manage_apps/globals.dart' as globals;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -30,6 +31,12 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
+    if (globals.jwtToken == '' && globals.isLoggedIn == false) {
+      print("ออกจากระบบสำเร็จ");
+    }
+    if (globals.isActive == false) {
+      print("ลบบัญชีสำเร็จ");
+    }
   }
 
   void displayDialog(context, title, text) => showDialog(
@@ -53,11 +60,8 @@ class _LoginPageState extends State<LoginPage> {
       },
       body: jsonEncode(body),
     );
-    if (response.statusCode == 200) {
-      return LoginResponse.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to Login.');
-    }
+    return LoginResponse.fromJson(
+        jsonDecode(response.body), response.statusCode);
   }
 
   @override
@@ -68,9 +72,51 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-          Text(
-            "Forum App",
-            style: TextStyle(fontSize: 30),
+          Container(
+            width: 331.32,
+            height: 119.81,
+            child: Stack(
+              children: [
+                Positioned(
+                  left: 25,
+                  top: 26,
+                  child: Transform(
+                    transform: Matrix4.identity()
+                      ..translate(0.0, 0.0)
+                      ..rotateZ(0.01),
+                    child: Text(
+                      'GU  RU',
+                      style: GoogleFonts.prompt(
+                          color: Colors.black, fontSize: 80, height: 0),
+                      // style: TextStyle(
+                      //   color: Colors.black,
+                      //   fontSize: 96,
+                      //   fontFamily: 'Inter',
+                      //   fontWeight: FontWeight.w400,
+                      //   height: 0,
+                      // ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 130,
+                  top: 130,
+                  right: 1,
+                  child: Transform(
+                    transform: Matrix4.identity()
+                      ..translate(0.0, 0.0)
+                      ..rotateZ(-1.56),
+                    child: Text(
+                      ' ไม่',
+                      style: GoogleFonts.prompt(
+                          color: const Color.fromARGB(255, 129, 129, 129),
+                          fontSize: 50,
+                          height: 0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           Form(
             key: _loginForm,
@@ -82,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: TextFormField(
                       controller: usernameController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         labelText: 'Email',
                         hintText: 'Enter Email',
                         prefixIcon: Icon(Icons.email),
@@ -104,10 +150,10 @@ class _LoginPageState extends State<LoginPage> {
                     enableSuggestions: false,
                     autocorrect: false,
                     decoration: const InputDecoration(
-                        labelText: 'Password',
-                        hintText: 'Enter Password',
-                        prefixIcon: Icon(Icons.security),
-                        border: OutlineInputBorder()),
+                      labelText: 'Password',
+                      hintText: 'Enter Password',
+                      prefixIcon: Icon(Icons.security),
+                    ),
                     onChanged: (String value) {},
                     validator: (value) {
                       return value!.isEmpty
@@ -122,25 +168,15 @@ class _LoginPageState extends State<LoginPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      const Text("ยังไม่ได้เป็นสมาชิก ? "),
                       TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            "ลืมรหัสผ่าน?",
-                            style: TextStyle(fontSize: 13),
-                          )),
-                      Row(
-                        children: [
-                          const Text("ยังไม่ได้เป็นสมาชิก ? "),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => RegisterPage()));
-                              },
-                              child: const Text("สมัครเลย")),
-                        ],
-                      )
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RegisterPage()));
+                          },
+                          child: const Text("สมัครเลย"))
                     ],
                   ),
                 ),
@@ -152,8 +188,8 @@ class _LoginPageState extends State<LoginPage> {
                       if (_loginForm.currentState!.validate()) {
                         print('Login in Progress');
                         LoginResponse res = await verifyLogin();
-
-                        if (res.loginStatus == 1) {
+                        print("status:  ${res.statusCode}");
+                        if (res.statusCode == 200) {
                           // ignore: avoid_print
                           print('Login Success');
 
@@ -165,9 +201,8 @@ class _LoginPageState extends State<LoginPage> {
                             MaterialPageRoute(
                                 builder: (context) => const PostListPage()),
                           );
-                        } else {
-                          displayDialog(context, "Error",
-                              "Please check your email and password");
+                        } else if (res.statusCode == 403) {
+                          displayDialog(context, "Error", "ไม่พบผู้ใช้งาน");
                         }
                       }
                     },

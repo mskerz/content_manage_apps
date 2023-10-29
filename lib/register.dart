@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:animations/animations.dart';
 import 'package:content_manage_apps/login.dart';
-import 'package:content_manage_apps/model/register_res.dart';
+import 'package:content_manage_apps/model/request_res.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:content_manage_apps/globals.dart' as globals;
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -19,11 +21,13 @@ class _RegisterPageState extends State<RegisterPage> {
   final name = TextEditingController();
   final email = TextEditingController();
   final password = TextEditingController();
+  final bio = TextEditingController();
 
   late int statusCode;
   @override
   void initState() {
     super.initState();
+    bio.text = 'bio  here ';
   }
 
   @override
@@ -32,12 +36,14 @@ class _RegisterPageState extends State<RegisterPage> {
     name.dispose();
     email.dispose();
     password.dispose();
+    bio.dispose();
   }
 
-  Future<RegisterResponse> register() async {
+  Future<RequestResponse> register() async {
     final body = {
       'name': name.text,
       'email': email.text,
+      'bio': bio.text,
       'password': password.text,
     };
 
@@ -51,116 +57,149 @@ class _RegisterPageState extends State<RegisterPage> {
       body: jsonEncode(body),
     );
 
-    return RegisterResponse.fromJson(
+    return RequestResponse.fromJson(
         jsonDecode(response.body), response.statusCode);
   }
 
-  void displayDialog(context, title, text) => showDialog(
+  void displayDialog(context, title, text, Icon icon) => showDialog(
         context: context,
         builder: (context) =>
-            AlertDialog(title: Text(title), content: Text(text)),
+            AlertDialog(title: Text(title), icon: icon, content: Text(text)),
       );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(title: Text("Register")),
         body: Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Form(
+              key: _registerForm,
+              child: Column(
                 children: [
-              Form(
-                key: _registerForm,
-                child: Column(
-                  children: [
-                    SizedBox(height: 50),
-                    SizedBox(
-                        width: 360,
-                        child: TextFormField(
-                          controller: name,
-                          keyboardType: TextInputType.text,
-                          decoration: InputDecoration(
-                            labelText: 'Name',
-                            hintText: 'Enter Name',
-                            prefixIcon: Icon(Icons.person_2),
-                          ),
-                          onChanged: (String value) {},
-                          validator: (value) {
-                            return value!.isEmpty
-                                ? 'Please enter your name'
-                                : null;
-                          },
-                        )),
-                    SizedBox(height: 20),
-                    SizedBox(
-                        width: 360,
-                        child: TextFormField(
-                          controller: email,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                            hintText: 'Enter Email',
-                            prefixIcon: Icon(Icons.email),
-                          ),
-                          onChanged: (String value) {},
-                          validator: (value) {
-                            return value!.isEmpty
-                                ? 'Please enter your name'
-                                : null;
-                          },
-                        )),
-                    SizedBox(
+                  Text(
+                    "ลงทะเบียนผู้ใช้",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  SizedBox(height: 40),
+                  SizedBox(
                       width: 360,
                       child: TextFormField(
-                        controller: password,
+                        controller: name,
                         keyboardType: TextInputType.text,
-                        obscureText: true,
-                        enableSuggestions: false,
-                        autocorrect: false,
                         decoration: InputDecoration(
-                          labelText: 'Password',
-                          hintText: 'Enter Password',
-                          prefixIcon: Icon(Icons.security),
+                          labelText: 'Name',
+                          hintText: 'Enter Name',
+                          prefixIcon: Icon(Icons.person_2_outlined),
                         ),
                         onChanged: (String value) {},
                         validator: (value) {
                           return value!.isEmpty
-                              ? 'Please enter your passsord'
+                              ? 'Please enter your name'
                               : null;
                         },
+                      )),
+                  SizedBox(height: 20),
+                  SizedBox(
+                      width: 360,
+                      child: TextFormField(
+                        controller: email,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          labelText: 'Email',
+                          hintText: 'Enter Email',
+                          prefixIcon: Icon(Icons.email_outlined),
+                        ),
+                        onChanged: (String value) {},
+                        validator: (value) {
+                          return value!.isEmpty
+                              ? 'Please enter your name'
+                              : null;
+                        },
+                      )),
+                  SizedBox(
+                      width: 360,
+                      child: TextFormField(
+                        controller: bio,
+                        keyboardType: TextInputType.text,
+                        maxLines: 2,
+                        decoration: InputDecoration(
+                          labelText: 'Bio',
+                          hintText: 'Fill your bio information',
+                          prefixIcon: Icon(FontAwesomeIcons.message),
+                        ),
+                        onChanged: (String value) {},
+                      )),
+                  SizedBox(
+                    width: 360,
+                    child: TextFormField(
+                      controller: password,
+                      keyboardType: TextInputType.text,
+                      obscureText: true,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'Enter Password',
+                        prefixIcon: Icon(Icons.lock_outline),
+                      ),
+                      onChanged: (String value) {},
+                      validator: (value) {
+                        return value!.isEmpty
+                            ? 'Please enter your passsord'
+                            : null;
+                      },
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: FilledButton(
+                      onPressed: () async {
+                        //
+                        if (_registerForm.currentState!.validate()) {
+                          // เรียกฟังก์ชัน register เมื่อข้อมูลถูกต้อง
+                          final res = await register();
+                          print(res.status);
+                          if (res.status == 200) {
+                            // แสดง SnackBar ด้วย ScaffoldMessenger
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                showCloseIcon: true,
+                                content: Text('ลงทะเบียนสำเร็จ'),
+                                duration: Duration(seconds: 2),
+                                // กำหนดระยะเวลาที่ SnackBar จะแสดง
+                              ),
+                            );
+                            globals.isActive = true;
+                            // ignore: use_build_context_synchronously
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()));
+                            // หลังจากแสดง SnackBar ให้กลับไปหน้า login โดยใช้ Navigator
+                          } else if (res.status == 400) {
+                            // ignore: use_build_context_synchronously
+                            displayDialog(
+                                context,
+                                'อีเมลซ้ำ',
+                                'อีเมลนี้มีผู้ใช้แล้ว !',
+                                const Icon(Icons.warning_amber));
+                          }
+                        } else {}
+                      },
+                      child: const Text(
+                        'ลงทะเบียน',
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    SizedBox(height: 20),
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: MaterialButton(
-                        minWidth: double.infinity,
-                        onPressed: () async {
-                          //
-                          if (_registerForm.currentState!.validate()) {
-                            // เรียกฟังก์ชัน register เมื่อข้อมูลถูกต้อง
-                            final res = await register();
-                            print(res.status);
-                            if (res.status == 200) {
-                              print("status: + ${res.status} ลงทะเบียนสำเร็จ");
-                              // ignore: use_build_context_synchronously
-                              Navigator.pop(context);
-                            } else if (res.status == 400) {
-                              print(
-                                  "status: + ${res.status} อีเมลนี้มีผู้ใช้แล้ว");
-                            }
-                          } else {}
-                        },
-                        color: const Color.fromARGB(255, 255, 147, 24),
-                        child: const Text(
-                          'ลงทะเบียน',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
-            ])));
+            ),
+          ]),
+        ));
   }
 }

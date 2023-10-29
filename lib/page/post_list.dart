@@ -104,8 +104,8 @@ class _PostListPageState extends State<PostListPage> {
   Future<void> retrevePosts() async {
     List<Posts> res = await loadPostsAll();
     setState(() {
-      allPosts = res ; 
-      isLoaded = isLoaded?!isLoaded:isLoaded;
+      allPosts = res;
+      isLoaded = isLoaded ? !isLoaded : isLoaded;
     });
   }
 
@@ -122,7 +122,7 @@ class _PostListPageState extends State<PostListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        backgroundColor: Color.fromARGB(255, 238, 238, 238),
         drawer: userDrawer(user),
         appBar: AppBar(
           iconTheme: IconThemeData(color: const Color.fromARGB(255, 0, 0, 0)),
@@ -143,7 +143,6 @@ class _PostListPageState extends State<PostListPage> {
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
-                    
                     return ListView.builder(
                       itemCount: snapshot.data!.length,
                       itemBuilder: (context, index) {
@@ -161,10 +160,12 @@ class _PostListPageState extends State<PostListPage> {
                             );
                           },
                           child: Container(
+                            
                             height: 136,
                             margin: EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 8),
                             decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 255, 255, 255),
                                 border: Border.all(
                                     color: Color.fromARGB(255, 197, 197, 197)),
                                 borderRadius: BorderRadius.circular(8.0)),
@@ -371,7 +372,7 @@ class _PostListPageState extends State<PostListPage> {
                 icon: Icon(Icons.home),
                 onPressed: () {
                   Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (_) => PostListPage()));
+                      MaterialPageRoute(builder: (context) => PostListPage()));
                 },
               ),
               buildBookmarkIcon(context, false),

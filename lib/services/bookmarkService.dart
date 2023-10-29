@@ -49,3 +49,4 @@ Future<void> toggleBookmark(int post_id) async {
   final bookmarks = await getBookmarks(); // เรียกใช้งานฟังก์ชันเพื่อรับรายการ bookmarks
   return bookmarks.any((bookmark) => bookmark.id == post_id);
 }
+

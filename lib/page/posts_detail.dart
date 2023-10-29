@@ -69,6 +69,7 @@ class _PostDetailsPageState extends State<PostDetailsPage> {
                 //final updatedDate = DateFormat('dd MMMM yyyy').format(DateTime.parse(post.updatedAt.toString()));
 
                 return SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

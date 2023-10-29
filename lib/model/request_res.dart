@@ -1,16 +1,16 @@
-class RegisterResponse {
+class RequestResponse {
   final String message;
   final int status;
    
 
-  const RegisterResponse({
+  const RequestResponse({
    required this.message,
    required this.status,
 
   });
 
-  factory RegisterResponse.fromJson(Map<String, dynamic> json,int status) {
-    return RegisterResponse(
+  factory RequestResponse.fromJson(Map<String, dynamic> json,int status) {
+    return RequestResponse(
       message: json['message'], 
       status: status,
      

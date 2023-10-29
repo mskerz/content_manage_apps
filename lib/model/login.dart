@@ -1,23 +1,21 @@
 class LoginResponse {
-  final String email;
   final String jwtToken;
   final int userId;
   final int loginStatus;
+  final int statusCode;
 
-  const LoginResponse({
-    required this.email,
-    required this.jwtToken,
-    required this.userId,
-    required this.loginStatus,
-  });
+  const LoginResponse(
+      {required this.jwtToken,
+      required this.userId,
+      required this.loginStatus,
+      required this.statusCode});
 
-  factory LoginResponse.fromJson(Map<String, dynamic> json) {
+  factory LoginResponse.fromJson(Map<String, dynamic> json, int status) {
     return LoginResponse(
-      email: json['email'],
-      jwtToken: json['jwt_token'],
-      userId: json['user_id'],
-      loginStatus: json['status'],
-    );
+        jwtToken: json['jwt_token'] != null ? json['jwt_token'] : '',
+        userId: json['user_id'] != null ? json['user_id'] : 0,
+        loginStatus: json['status'],
+        statusCode: status);
   }
 
   String getToken() {
