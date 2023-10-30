@@ -2,7 +2,7 @@ import 'package:content_manage_apps/model/category.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
- 
+
 class CategoryProvider with ChangeNotifier {
   List<Category> _categories = [];
   int _selectedCategoryId = 0;
@@ -34,5 +34,4 @@ class CategoryProvider with ChangeNotifier {
       notifyListeners();
     }
   }
-
 }

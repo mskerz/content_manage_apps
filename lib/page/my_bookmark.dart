@@ -4,6 +4,7 @@ import 'package:content_manage_apps/model/user.dart';
 import 'package:content_manage_apps/page/post_create.dart';
 import 'package:content_manage_apps/page/post_list.dart';
 import 'package:content_manage_apps/page/posts_detail.dart';
+import 'package:content_manage_apps/page/user/user_profile.dart';
 import 'package:content_manage_apps/services/bookmarkService.dart';
 import 'package:content_manage_apps/services/postsService.dart';
 import 'package:content_manage_apps/services/userService.dart';
@@ -11,6 +12,7 @@ import 'package:content_manage_apps/widget/appbar.dart';
 import 'package:content_manage_apps/widget/count_bookmark.dart';
 import 'package:content_manage_apps/widget/drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyBookListPage extends StatefulWidget {
   const MyBookListPage({super.key});
@@ -27,7 +29,7 @@ class _MyBookListPageState extends State<MyBookListPage> {
   void initState() {
     user = getUser();
     futureBookmarkPosts = getBookmarks();
-    
+
     super.initState();
   }
 
@@ -50,6 +52,17 @@ class _MyBookListPageState extends State<MyBookListPage> {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
+            } else if (snapshot.data.isEmpty) {
+              return const Center(
+                  child: Column(
+                children: [
+                  Text(
+                    'ไม่มีบุ๊กมาร์กในตอนนี้',
+                    style: TextStyle(
+                        fontSize: 20, color: Color.fromARGB(255, 55, 55, 55)),
+                  ),
+                ],
+              ));
             } else {
               return ListView.builder(
                 itemCount: snapshot.data!.length,
@@ -129,7 +142,7 @@ class _MyBookListPageState extends State<MyBookListPage> {
                       ));
                 },
               ),
-              buildBookmarkIcon(context,true),
+              buildBookmarkIcon(context, true),
               IconButton(
                 icon: Icon(Icons.create),
                 onPressed: () {
@@ -139,8 +152,18 @@ class _MyBookListPageState extends State<MyBookListPage> {
                           builder: (context) => CreatePostPage()));
                 },
               ),
+              IconButton(
+                icon: Icon(Icons.person_2),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UserProfilePage()));
+                },
+              ),
             ],
           ),
         ));
   }
 }
+

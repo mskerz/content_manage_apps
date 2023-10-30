@@ -55,6 +55,25 @@ Future<List<Posts>> loadPostsUser() async {
   }
 }
 
+Future<Posts> getPostsUserbypostId(int postId) async {
+  final response = await http.get(
+      Uri.parse('http://10.0.2.2:8000/api/post/user/$postId'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': "*/*",
+        'connection': 'keep-alive',
+        // ignore: prefer_interpolation_to_compose_strings
+        'Authorization': 'Bearer ' + globals.jwtToken
+      });
+  print("Token: " + globals.jwtToken);
+  if (response.statusCode == 200) {
+    final data = jsonDecode(response.body);
+    return Posts.fromJson(data);
+  } else {
+    throw Exception("cannot get post user  by post_id!");
+  }
+}
+
 Future<List<Posts>> searchPosts(String? search) async {
   final response = await http.get(
       Uri.parse('http://10.0.2.2:8000/api/search/posts?search=$search'),

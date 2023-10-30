@@ -31,27 +31,25 @@ class PostProvider extends ChangeNotifier {
   }
 
   Future<void> loadPostsUser() async {
-  final response = await http.get(
-      Uri.parse('http://10.0.2.2:8000/api/posts/user'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Accept': "*/*",
-        'connection': 'keep-alive',
-        // ignore: prefer_interpolation_to_compose_strings
-        'Authorization': 'Bearer ' + globals.jwtToken
-      });
-  print("Token: " + globals.jwtToken);
-  if (response.statusCode == 200) {
-    final data = jsonDecode(response.body) as List<dynamic>;
-    _posts = data.map((json) => Posts.fromJson(json)).toList();
-    notifyListeners();
-  } else {
-    _posts = <Posts>[];
-    notifyListeners();
+    final response = await http.get(
+        Uri.parse('http://10.0.2.2:8000/api/posts/user'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': "*/*",
+          'connection': 'keep-alive',
+          // ignore: prefer_interpolation_to_compose_strings
+          'Authorization': 'Bearer ' + globals.jwtToken
+        });
+    print("Token: " + globals.jwtToken);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body) as List<dynamic>;
+      _posts = data.map((json) => Posts.fromJson(json)).toList();
+      notifyListeners();
+    } else {
+      _posts = <Posts>[];
+      notifyListeners();
+    }
   }
-}
-
-  
 
   Future<void> fetchPostsByCategory(int categoryId) async {
     if (categoryId == 0) {
@@ -93,8 +91,7 @@ class PostProvider extends ChangeNotifier {
 
   Future<void> search(String query) async {
     _filterposts = _posts
-        .where((post) =>
-            post.title.toLowerCase().contains(query.toLowerCase())  )
+        .where((post) => post.title.toLowerCase().contains(query.toLowerCase()))
         .toList();
     notifyListeners();
   }

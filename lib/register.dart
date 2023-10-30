@@ -65,7 +65,7 @@ class _RegisterPageState extends State<RegisterPage> {
         context: context,
         builder: (context) =>
             AlertDialog(title: Text(title), icon: icon, content: Text(text)),
-      );
+  );
 
   @override
   Widget build(BuildContext context) {

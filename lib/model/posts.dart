@@ -16,6 +16,8 @@ class Posts {
   String details;
   String username;
   String category;
+  // ignore: non_constant_identifier_names
+  int category_id;
   String images;
   DateTime createdAt;
   DateTime updatedAt;
@@ -27,6 +29,8 @@ class Posts {
     required this.details,
     required this.username,
     required this.category,
+    // ignore: non_constant_identifier_names
+    required this.category_id,
     required this.images,
     required this.createdAt,
     required this.updatedAt,
@@ -38,10 +42,11 @@ class Posts {
         title: json["title"],
         details: json["details"],
         username: json["username"],
-        category: json["category"],
+        category: json["category"], 
+        category_id: json["category_id"],
         images: json["images"],
         createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
+        updatedAt: DateTime.parse(json["updated_at"]),  
       );
 
   Map<String, dynamic> toJson() => {

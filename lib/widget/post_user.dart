@@ -1,8 +1,16 @@
+import 'dart:convert';
+
+import 'package:content_manage_apps/model/request_res.dart';
+import 'package:content_manage_apps/page/post_edit.dart';
+import 'package:content_manage_apps/page/post_list.dart';
 import 'package:content_manage_apps/page/posts_detail.dart';
 import 'package:content_manage_apps/provider/posts_data.dart';
 import 'package:content_manage_apps/services/postsService.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:content_manage_apps/globals.dart' as globals;
 
 class PostUser extends StatefulWidget {
   const PostUser({super.key});
@@ -17,6 +25,21 @@ class _PostUserState extends State<PostUser> {
     super.initState();
     final postProvider = Provider.of<PostProvider>(context, listen: false);
     postProvider.loadPostsUser();
+  }
+
+  Future<RequestResponse> deletePost(int postId) async {
+    final response = await http.delete(
+      Uri.parse('http://10.0.2.2:8000/api/user/delete/post/$postId'), //
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        'Accept': "*/*",
+        'connection': 'keep-alive',
+        'Authorization': 'Bearer ' + globals.jwtToken
+      },
+    );
+
+    return RequestResponse.fromJson(
+        jsonDecode(response.body), response.statusCode);
   }
 
   @override
@@ -86,14 +109,94 @@ class _PostUserState extends State<PostUser> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           IconButton(
-                                            icon: Icon(Icons.share),
-                                            onPressed: () {},
+                                            icon: Icon(Icons.delete_outlined),
+                                            onPressed: () {
+                                              // ใช้ showDialog เพื่อแสดงหน้าต่างยืนยันการลบ
+                                              showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    surfaceTintColor:
+                                                        Colors.white,
+                                                    title: Text(
+                                                        'ยืนยันการลบโพสต์'),
+                                                    content: Text(
+                                                        'คุณแน่ใจหรือไม่ที่ต้องการลบโพสต์นี้?'),
+                                                    actions: <Widget>[
+                                                      ElevatedButton(
+                                                        style: ElevatedButton
+                                                            .styleFrom(
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black),
+                                                        child: Text(
+                                                          'ยืนยัน',
+                                                          style: GoogleFonts
+                                                              .prompt(
+                                                                  color: Colors
+                                                                      .white),
+                                                        ),
+                                                        onPressed: () {
+                                                          // เรียกฟังก์ชันที่ลบโพสต์
+
+                                                          Navigator.of(context)
+                                                              .pop(); // ปิดหน้าต่างยืนยัน
+
+                                                          deletePost(post.id)
+                                                              .then((res) {
+                                                            if (res.status ==
+                                                                200) {
+                                                              print(
+                                                                  "ลบโพสต์แล้ว");
+                                                              Navigator.pushReplacement(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              PostListPage()));
+                                                            }
+                                                          });
+                                                        },
+                                                      ),
+                                                      TextButton(
+                                                        child: Text(
+                                                          'ยกเลิก',
+                                                          style: GoogleFonts
+                                                              .prompt(
+                                                                  color: Colors
+                                                                      .black),
+                                                        ),
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop(); // ปิดหน้าต่างยืนยัน
+                                                        },
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              );
+                                            },
                                           ),
                                           IconButton(
                                             onPressed: () {
                                               setState(() {});
                                             },
                                             icon: Icon(Icons.bookmark),
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          EditPostPage(
+                                                            postId: post.id,
+                                                          )));
+                                            },
+                                            icon: Icon(Icons.edit),
                                           ),
                                         ],
                                       ),

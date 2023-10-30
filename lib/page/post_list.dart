@@ -44,25 +44,6 @@ class _PostListPageState extends State<PostListPage> {
   // ignore: non_constant_identifier_names
   TextEditingController textController = TextEditingController();
 
-  Future<void> fetchPost(int categoryId) async {
-    setState(() {
-      isLoaded = false;
-    });
-    if (categoryId == 0) {
-      futurePosts = loadPostsAll();
-      //re render ui
-      setState(() {
-        isLoaded = true;
-      });
-    } else {
-      futurePosts = loadPostsByCategory(categoryId);
-      //re render ui
-      setState(() {
-        isLoaded = true;
-      });
-    }
-  }
-
   Future<void> refreshPosts() async {
     setState(() {
       futurePosts = loadPostsAll(); // Call your method to fetch posts here.
@@ -122,6 +103,7 @@ class _PostListPageState extends State<PostListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Color.fromARGB(255, 238, 238, 238),
         drawer: userDrawer(user),
         appBar: AppBar(
@@ -160,12 +142,11 @@ class _PostListPageState extends State<PostListPage> {
                             );
                           },
                           child: Container(
-                            
                             height: 136,
                             margin: EdgeInsets.symmetric(
                                 horizontal: 16, vertical: 8),
                             decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 255, 255, 255),
+                                color: const Color.fromARGB(255, 255, 255, 255),
                                 border: Border.all(
                                     color: Color.fromARGB(255, 197, 197, 197)),
                                 borderRadius: BorderRadius.circular(8.0)),

@@ -4,6 +4,8 @@ import 'package:content_manage_apps/main.dart';
 import 'package:content_manage_apps/page/my_bookmark.dart';
 import 'package:content_manage_apps/page/my_postList.dart';
 import 'package:content_manage_apps/page/post_list.dart';
+import 'package:content_manage_apps/page/posts_list.dart';
+import 'package:content_manage_apps/services/userService.dart';
 import 'package:flutter/material.dart';
 import 'package:content_manage_apps/globals.dart' as globals;
 
@@ -113,11 +115,18 @@ Widget userDrawer(Future<User>? user) {
                   ),
                   ListTile(
                     title: Text('ออกจากระบบ'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                      );
+                    onTap: () async {
+                      final res = await logout();
+                      if (res.status == 200) {
+                        globals.jwtToken = '';
+                        globals.isLoggedIn = false;
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => LoginPage(),
+                          ),
+                          (Route<dynamic> route) => false,
+                        );
+                      }
                     },
                   ),
                 ],

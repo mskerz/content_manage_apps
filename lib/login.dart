@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:content_manage_apps/model/api_res.dart';
 import 'package:content_manage_apps/model/login.dart';
 import 'package:content_manage_apps/page/post_list.dart';
+import 'package:content_manage_apps/page/posts_list.dart';
 import 'package:content_manage_apps/register.dart';
 import 'package:content_manage_apps/globals.dart' as globals;
 import 'package:flutter/material.dart';
@@ -109,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                     child: Text(
                       ' ไม่',
                       style: GoogleFonts.prompt(
-                          color: const Color.fromARGB(255, 129, 129, 129),
+                          color: Color.fromARGB(255, 188, 96, 213),
                           fontSize: 50,
                           height: 0),
                     ),
@@ -199,7 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const PostListPage()),
+                                builder: (context) => const PostList2Page()),
                           );
                         } else if (res.statusCode == 403) {
                           displayDialog(context, "Error", "ไม่พบผู้ใช้งาน");
